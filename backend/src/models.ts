@@ -1,17 +1,18 @@
 export class Helice {
-    constructor(public n: number) {}
+    constructor(public cantidad: number) {}
 }
 
 export class Alas {
-    constructor(public f: number, public c: number) {}
+    constructor(public frontales: number, public traseras: number) {}
 }
 
+// Estas dos se usarán para COMPOSICIÓN
 export class TrenAterrizaje {
-    constructor(public tipo: string) {}
+    constructor(public tipo: string = "Retráctil") {}
 }
 
 export class Cubierta {
-    constructor(public material: string) {}
+    constructor(public material: string = "Aluminio Reforzado") {}
 }
 
 export class Aeroplano {
@@ -25,16 +26,16 @@ export class Aeroplano {
         this.id = id;
         this.helice = helice;
         this.alas = alas;
-        // Estas dos se crean SIEMPRE adentro (Composición)
-        this.tren = new TrenAterrizaje("Retráctil");
-        this.cubierta = new Cubierta("Titanio");
+        // Composición: el Aeroplano las crea internamente
+        this.tren = new TrenAterrizaje();
+        this.cubierta = new Cubierta();
     }
 
-    public getInfo() {
+    public getDetalles() {
         return {
             id: this.id,
-            helice: this.helice.n,
-            alas: `${this.alas.f}/${this.alas.c}`,
+            helice: `${this.helice.cantidad} palas`,
+            alas: `${this.alas.frontales} f / ${this.alas.traseras} t`,
             tren: this.tren.tipo,
             cubierta: this.cubierta.material
         };

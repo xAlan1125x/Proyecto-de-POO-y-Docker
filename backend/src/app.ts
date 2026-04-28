@@ -6,27 +6,31 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-let aeroplanos: Aeroplano[] = [];
-let idCounter = 1;
+let flota: Aeroplano[] = [];
+let idAutoIncrement = 1;
 
-// CREATE
+// READ (Listar todos)
+app.get('/aeroplanos', (req, res) => {
+    res.json(flota.map(a => a.getDetalles()));
+});
+
+// CREATE (Crear uno nuevo)
 app.post('/aeroplanos', (req, res) => {
     const { numHelices, fAlas, cAlas } = req.body;
-    const nuevo = new Aeroplano(idCounter++, new Helice(numHelices), new Alas(fAlas, cAlas));
-    aeroplanos.push(nuevo);
-    res.status(201).json(nuevo.getInfo());
+    const nuevoAvion = new Aeroplano(
+        idAutoIncrement++, 
+        new Helice(numHelices), 
+        new Alas(fAlas, cAlas)
+    );
+    flota.push(nuevoAvion);
+    res.status(201).json(nuevoAvion.getDetalles());
 });
 
-// READ
-app.get('/aeroplanos', (req, res) => {
-    res.json(aeroplanos.map(a => a.getInfo()));
-});
-
-// DELETE
+// DELETE (Borrar)
 app.delete('/aeroplanos/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    aeroplanos = aeroplanos.filter(a => a.id !== id);
-    res.status(204).send();
+    flota = flota.filter(a => a.id !== id);
+    res.status(200).send({ mensaje: "Aeroplano eliminado" });
 });
 
-app.listen(3000, () => console.log("Backend corriendo en puerto 3000"));
+app.listen(3000, () => console.log("Servidor en puerto 3000"));

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD Aeroplanos</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <h1>Gestión de Aeroplanos</h1>
+    
+    <div class="card">
+        <h3>Crear Nuevo</h3>
+        <input type="number" id="h" placeholder="Hélices">
+        <input type="number" id="af" placeholder="Alas Frente">
+        <input type="number" id="at" placeholder="Alas Traseras">
+        <button onclick="crear()">Agregar Aeroplano</button>
+    </div>
+
+    <div id="lista"></div>
+
+    <script>
+        const API = 'http://localhost:3000/aeroplanos';
+
+        async function cargar() {
+            const res = await fetch(API);
+            const datos = await res.json();
+            const lista = document.getElementById('lista');
+            lista.innerHTML = '<h2>Flota Actual</h2>';
+            datos.forEach(a => {
+                lista.innerHTML += `
+                    <div class="card">
+                        <b>ID: ${a.id}</b> - Hélices: ${a.helice} - Alas: ${a.alas} <br>
+                        <small>Componentes (Composición): ${a.tren} | ${a.cubierta}</small>
+                        <button onclick="eliminar(${a.id})" style="color:red; margin-left:10px;">Eliminar</button>
+                    </div>`;
+            });
+        }
+
+        async function crear() {
+            const numHelices = document.getElementById('h').value;
+            const fAlas = document.getElementById('af').value;
+            const cAlas = document.getElementById('at').value;
+
+            await fetch(API, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ numHelices, fAlas, cAlas })
+            });
+            cargar();
+        }
+
+        async function eliminar(id) {
+            await fetch(`${API}/${id}`, { method: 'DELETE' });
+            cargar();
+        }
+
+        cargar();
+    </script>
+</body>
+</html>
