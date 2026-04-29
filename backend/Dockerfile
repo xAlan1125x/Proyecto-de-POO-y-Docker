@@ -3,5 +3,5 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-# Usamos ts-node para ejecutar directamente el TS en desarrollo
-CMD ["npx", "ts-node", "src/app.ts"]
+# Ejecutamos el script que definimos en el package.json
+CMD ["npm", "start"]

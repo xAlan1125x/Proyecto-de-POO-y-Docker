@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { Aeroplano, Helice, Alas } from './models';
+import { Aeroplano, Helice, Alas } from './models.js';
 
 const app = express();
 app.use(express.json());
@@ -26,11 +26,17 @@ app.post('/aeroplanos', (req, res) => {
     res.status(201).json(nuevoAvion.getDetalles());
 });
 
-// DELETE (Borrar)
+// DELETE (Borrar) - Esto completa el CRUD
 app.delete('/aeroplanos/:id', (req, res) => {
     const id = parseInt(req.params.id);
+    const longitudInicial = flota.length;
     flota = flota.filter(a => a.id !== id);
-    res.status(200).send({ mensaje: "Aeroplano eliminado" });
+    
+    if (flota.length < longitudInicial) {
+        res.status(200).send({ mensaje: "Eliminado" });
+    } else {
+        res.status(404).send({ mensaje: "No encontrado" });
+    }
 });
 
 app.listen(3000, () => console.log("Servidor en puerto 3000"));
